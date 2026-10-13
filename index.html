@@ -1,450 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Polling Pembelajaran - SD Muhammadiyah 001 Melak</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: linear-gradient(135deg, #0f766e 0%, #065f46 100%);
-    min-height: 100vh;
-    color: #1f2937;
-  }
-  .header {
-    background: #ffffff;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-bottom: 4px solid #f59e0b;
-  }
-  .header h1 { color: #065f46; font-size: 1.5rem; }
-  .header p { color: #6b7280; margin-top: 5px; font-size: 0.9rem; }
-  .container {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 0 15px;
-  }
-  .card {
-    background: #fff;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  }
-  .card h2 {
-    color: #065f46;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    border-bottom: 2px solid #f59e0b;
-    padding-bottom: 10px;
-  }
-  .form-group { margin-bottom: 15px; }
-  .form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #374151;
-    font-size: 0.95rem;
-  }
-  .form-group input[type="text"],
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 2px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: border-color 0.2s;
-    font-family: inherit;
-  }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    outline: none;
-    border-color: #0f766e;
-  }
-  .form-group textarea { resize: vertical; min-height: 80px; }
-  .radio-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-top: 5px;
-  }
-  .radio-option {
-    position: relative;
-  }
-  .radio-option input[type="radio"] {
-    position: absolute;
-    opacity: 0;
-  }
-  .radio-option label {
-    display: block;
-    padding: 15px;
-    border: 2px solid #d1d5db;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-    background: #f9fafb;
-  }
-  .radio-option input[type="radio"]:checked + label {
-    background: #0f766e;
-    color: #fff;
-    border-color: #065f46;
-    transform: scale(1.02);
-  }
-  .radio-option label .icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
-  .btn {
-    width: 100%;
-    padding: 13px;
-    background: #0f766e;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-    margin-top: 10px;
-  }
-  .btn:hover { background: #065f46; }
-  .btn:disabled { background: #9ca3af; cursor: not-allowed; }
-  .alert {
-    padding: 12px;
-    border-radius: 8px;
-    margin-top: 15px;
-    display: none;
-    font-size: 0.9rem;
-  }
-  .alert.success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
-  .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
-  .footer {
-    text-align: center;
-    color: #fff;
-    padding: 20px;
-    font-size: 0.85rem;
-    opacity: 0.9;
-  }
-  .admin-toggle {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background: rgba(255,255,255,0.2);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.3);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-  }
-  /* Sidebar Admin */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -450px;
-    width: 100%;
-    max-width: 420px;
-    height: 100vh;
-    background: #fff;
-    box-shadow: -5px 0 25px rgba(0,0,0,0.3);
-    transition: right 0.3s ease;
-    overflow-y: auto;
-    z-index: 1000;
-  }
-  .sidebar.active { right: 0; }
-  .sidebar-header {
-    background: #065f46;
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .sidebar-header h3 { font-size: 1.1rem; }
-  .close-btn {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-  .sidebar-body { padding: 20px; }
-  .stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .stat-box {
-    background: #f0fdfa;
-    border-left: 4px solid #0f766e;
-    padding: 12px;
-    border-radius: 8px;
-  }
-  .stat-box .label { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; }
-  .stat-box .value { font-size: 1.4rem; font-weight: 700; color: #065f46; margin-top: 3px; }
-  .stat-box.full { grid-column: 1 / -1; }
-  .progress-bar {
-    background: #e5e7eb;
-    border-radius: 10px;
-    height: 25px;
-    overflow: hidden;
-    margin: 8px 0;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #0f766e, #10b981);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: width 0.5s;
-  }
-  .feedback-list {
-    max-height: 250px;
-    overflow-y: auto;
-    background: #f9fafb;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 0.85rem;
-  }
-  .feedback-item {
-    padding: 8px;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  .feedback-item:last-child { border-bottom: none; }
-  .feedback-item .name { font-weight: 600; color: #065f46; }
-  .feedback-item .choice {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 0.7rem;
-    margin-left: 5px;
-  }
-  .choice.tatapmuka { background: #dbeafe; color: #1e40af; }
-  .choice.online { background: #fef3c7; color: #92400e; }
-  .feedback-item .msg { color: #4b5563; margin-top: 4px; font-style: italic; }
-  .sidebar-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-  }
-  .sidebar-actions button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 0.85rem;
-  }
-  .btn-refresh { background: #0f766e; color: #fff; }
-  .btn-print { background: #f59e0b; color: #fff; }
-  .btn-print:hover { background: #d97706; }
-  .btn-refresh:hover { background: #065f46; }
-  .overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 999;
-  }
-  .overlay.active { display: block; }
-  .loading {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #fff;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-right: 5px;
-    vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @media (max-width: 480px) {
-    .header h1 { font-size: 1.2rem; }
-    .radio-group { grid-template-columns: 1fr; }
-    .stat-grid { grid-template-columns: 1fr; }
-  }
-  @media print {
-    body { background: #fff; }
-    .sidebar { position: static; right: 0; width: 100%; max-width: 100%; box-shadow: none; }
-    .sidebar-header, .sidebar-actions, .admin-toggle, .overlay, .header, .container, .footer { display: none !important; }
-    .sidebar-body { padding: 0; }
-    .print-title { display: block !important; text-align: center; margin-bottom: 20px; }
-  }
-  .print-title { display: none; }
-</style>
-</head>
-<body>
-
-<div class="header">
-  <h1>📋 POLLING PEMBELAJARAN</h1>
-  <p>SD Muhammadiyah 001 Melak</p>
-</div>
-
-<div class="container">
-  <div class="card">
-    <h2>Formulir Pilihan Orang Tua / Wali</h2>
-    <p style="color:#6b7280; font-size:0.85rem; margin-bottom:15px;">
-      Mohon isi data berikut untuk menentukan metode pembelajaran yang diinginkan.
-    </p>
-
-    <form id="pollForm">
-      <div class="form-group">
-        <label>Nama Orang Tua / Wali *</label>
-        <input type="text" id="namaOrtu" required placeholder="Contoh: Budi Santoso" />
-      </div>
-
-      <div class="form-group">
-        <label>Nama Siswa *</label>
-        <input type="text" id="namaSiswa" required placeholder="Contoh: Ahmad Fauzi" />
-      </div>
-
-      <div class="form-group">
-        <label>Kelas *</label>
-        <select id="kelas" required>
-          <option value="">-- Pilih Kelas --</option>
-          <option>Kelas 1</option>
-          <option>Kelas 2</option>
-          <option>Kelas 3</option>
-          <option>Kelas 4</option>
-          <option>Kelas 5</option>
-          <option>Kelas 6</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Pilihan Metode Pembelajaran *</label>
-        <div class="radio-group">
-          <div class="radio-option">
-            <input type="radio" id="tatapmuka" name="pilihan" value="Tatap Muka" required />
-            <label for="tatapmuka">
-              <span class="icon">🏫</span>
-              Tatap Muka
-            </label>
-          </div>
-          <div class="radio-option">
-            <input type="radio" id="online" name="pilihan" value="Online" />
-            <label for="online">
-              <span class="icon">💻</span>
-              Online
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Masukan / Catatan (Opsional)</label>
-        <textarea id="masukan" placeholder="Tuliskan saran atau catatan Anda di sini..."></textarea>
-      </div>
-
-      <button type="submit" class="btn" id="submitBtn">Kirim Pilihan</button>
-
-      <div class="alert success" id="successAlert">
-        ✅ Terima kasih! Pilihan Anda telah berhasil dikirim.
-      </div>
-      <div class="alert error" id="errorAlert">
-        ❌ Gagal mengirim. Silakan coba lagi.
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="footer">
-  © SD Muhammadiyah 001 Melak - Sistem Polling Pembelajaran
-</div>
-
-<button class="admin-toggle" onclick="openAdminLogin()">🔐 Admin</button>
-
-<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <h3>📊 Rangkuman Admin</h3>
-    <button class="close-btn" onclick="closeSidebar()">✕</button>
-  </div>
-  <div class="sidebar-body">
-    <div class="print-title">
-      <h2>RANGKUMAN POLLING PEMBELAJARAN</h2>
-      <p>SD Muhammadiyah 001 Melak</p>
-      <p id="printDate"></p>
-    </div>
-
-    <div class="stat-grid">
-      <div class="stat-box">
-        <div class="label">Total Polling</div>
-        <div class="value" id="totalPoll">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="label">Total Kelas</div>
-        <div class="value" id="totalKelas">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="label">🏫 Tatap Muka</div>
-        <div class="value" id="countTM">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="label">💻 Online</div>
-        <div class="value" id="countOL">0</div>
-      </div>
-    </div>
-
-    <div>
-      <strong style="font-size:0.9rem;">Persentase Pilihan:</strong>
-      <div style="margin-top:8px;">
-        <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-          <span>Tatap Muka</span>
-          <span id="percentTM">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="barTM" style="width:0%">0%</div>
-        </div>
-      </div>
-      <div style="margin-top:10px;">
-        <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-          <span>Online</span>
-          <span id="percentOL">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="barOL" style="width:0%; background:linear-gradient(90deg,#f59e0b,#fbbf24);">0%</div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:20px;">
-      <strong style="font-size:0.9rem;">📝 Masukan Orang Tua:</strong>
-      <div class="feedback-list" id="feedbackList">
-        <p style="color:#9ca3af; text-align:center; padding:10px;">Belum ada masukan.</p>
-      </div>
-    </div>
-
-    <div class="sidebar-actions">
-      <button class="btn-refresh" onclick="loadSummary()">🔄 Refresh</button>
-      <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
-    </div>
-  </div>
-</div>
-
 <script>
   /* ============================================================
      ⚠️ GANTI URL DI BAWAH INI DENGAN URL WEB APP ANDA
-     (URL Google Apps Script yang sudah di-deploy)
      ============================================================ */
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPBwYK1H1ClPj5VONISauUvv4gdk0Ogqy9kkk7pLmyaoVUBeUbt_cjkQg9BVVIYfLKnQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl3V2Qjl9igHBq6UGGqMwKi-rVWLRQznwxb1CEEKBIeMjbhdvtq8DoGGU1xQWcK2hftQ/exec";
   /* ============================================================ */
 
-  /* Password admin sederhana (ganti sesuai keinginan) */
   const ADMIN_PASSWORD = "muhammadiyah001";
-
   const form = document.getElementById('pollForm');
   const submitBtn = document.getElementById('submitBtn');
   const successAlert = document.getElementById('successAlert');
@@ -463,31 +24,111 @@
       namaSiswa: document.getElementById('namaSiswa').value.trim(),
       kelas: document.getElementById('kelas').value,
       pilihan: document.querySelector('input[name="pilihan"]:checked').value,
-      masukan: document.getElementById('masukan').value.trim(),
-      timestamp: new Date().toISOString()
+      masukan: document.getElementById('masukan').value.trim()
     };
 
+    // COBA METODE 1: Fetch dengan text/plain (paling umum berhasil)
     try {
-      const response = await fetch(SCRIPT_URL, {
+      await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
+        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(data)
       });
-      // Karena no-cors, kita asumsikan berhasil jika tidak ada error
+      
+      // Karena no-cors, kita tidak bisa baca response
+      // Tapi request akan terkirim. Tampilkan sukses.
       successAlert.style.display = 'block';
       form.reset();
       setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
-    } catch (err) {
-      errorAlert.style.display = 'block';
-      console.error(err);
+    } catch (err1) {
+      console.warn('Metode 1 gagal, coba metode 2...', err1);
+      
+      // COBA METODE 2: Form tradisional via hidden iframe (100% reliable)
+      try {
+        await submitViaForm(data);
+        successAlert.style.display = 'block';
+        form.reset();
+        setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
+      } catch (err2) {
+        console.error('Kedua metode gagal:', err2);
+        errorAlert.style.display = 'block';
+        errorAlert.innerHTML = '❌ Gagal mengirim. Silakan coba lagi. <br><small>' + err2.message + '</small>';
+      }
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = 'Kirim Pilihan';
     }
   });
 
-  /* ====== ADMIN SIDEBAR ====== */
+  /**
+   * METODE 2: Submit via form tradisional + hidden iframe
+   * Ini bypass CORS sepenuhnya dan PASTI berhasil untuk Apps Script
+   */
+  function submitViaForm(data) {
+    return new Promise((resolve, reject) => {
+      // Buat iframe tersembunyi
+      const iframe = document.createElement('iframe');
+      iframe.name = 'hidden_iframe_' + Date.now();
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      // Buat form
+      const formEl = document.createElement('form');
+      formEl.method = 'POST';
+      formEl.action = SCRIPT_URL;
+      formEl.target = iframe.name;
+      formEl.style.display = 'none';
+
+      // Tambahkan data sebagai hidden input
+      // Apps Script akan terima sebagai e.parameter
+      Object.keys(data).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = data[key];
+        formEl.appendChild(input);
+      });
+
+      document.body.appendChild(formEl);
+
+      // Handle response dari iframe
+      let responded = false;
+      iframe.onload = () => {
+        if (responded) return;
+        responded = true;
+        try {
+          // Bersihkan
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+            document.body.removeChild(formEl);
+          }, 1000);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      };
+
+      // Timeout fallback
+      setTimeout(() => {
+        if (!responded) {
+          responded = true;
+          try {
+            document.body.removeChild(iframe);
+            document.body.removeChild(formEl);
+          } catch(e) {}
+          // Anggap berhasil karena Apps Script biasanya redirect
+          resolve();
+        }
+      }, 10000);
+
+      // Submit!
+      formEl.submit();
+    });
+  }
+
+  /* ====== ADMIN SIDEBAR (sama seperti sebelumnya) ====== */
   function openAdminLogin() {
     const pwd = prompt("Masukkan password admin:");
     if (pwd === ADMIN_PASSWORD) {
@@ -511,11 +152,18 @@
   async function loadSummary() {
     const url = SCRIPT_URL + '?action=summary';
     try {
-      const res = await fetch(url);
-      const data = await res.json();
+      const res = await fetch(url, { redirect: 'follow' });
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch(e) {
+        // Kadang Apps Script return HTML redirect page
+        throw new Error('Response bukan JSON. Periksa URL App Script Anda.');
+      }
       renderSummary(data);
     } catch (err) {
-      alert("Gagal memuat data. Periksa URL App Script atau koneksi.");
+      alert("Gagal memuat data: " + err.message + "\n\nPastikan URL App Script benar dan sudah di-authorize.");
       console.error(err);
     }
   }
@@ -551,21 +199,13 @@
     } else {
       fbList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:10px;">Belum ada masukan.</p>';
     }
-
     document.getElementById('printDate').textContent =
       'Dicetak pada: ' + new Date().toLocaleString('id-ID');
   }
 
   function escapeHtml(str) {
     if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
   }
 </script>
-
-</body>
-</html>

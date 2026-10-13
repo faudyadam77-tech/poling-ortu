@@ -1,26 +1,24 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poling Pembelajaran Ortu - SD Muhammadiyah 001 Melak</title>
+    <title>E-Poling Kebijakan Pembelajaran - SD Muhammadiyah 001 Melak</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Inter & Google Fonts -->
+    <!-- Google Font: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        emeraldTheme: {
-                            50: '#ecfdf5',
-                            100: '#d1fae5',
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
                             500: '#10b981',
                             600: '#059669',
                             700: '#047857',
@@ -34,119 +32,161 @@
     </script>
     <style>
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printable-admin-area, #printable-admin-area * {
-                visibility: visible;
-            }
-            #printable-admin-area {
+            body * { visibility: hidden !important; }
+            #printReportContainer, #printReportContainer * { visibility: visible !important; }
+            #printReportContainer {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
+                background: white;
+                color: black;
+                padding: 1rem;
+                z-index: 9999;
             }
-            .no-print {
-                display: none !important;
-            }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="bg-slate-100 text-slate-800 font-sans min-h-full flex flex-col justify-between selection:bg-brand-500 selection:text-white">
 
-    <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <div class="flex items-center space-x-3">
-                <div class="bg-white text-emerald-800 p-2.5 rounded-xl shadow-inner font-bold text-xl flex items-center justify-center">
-                    <i class="fa-solid fa-school-flag"></i>
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-brand-900 via-brand-800 to-emerald-900 text-white shadow-xl sticky top-0 z-40 border-b border-brand-700/50 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-11 h-11 bg-white/10 backdrop-blur border border-white/20 text-white rounded-xl shadow-inner flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-graduation-cap"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg sm:text-xl tracking-tight">SD Muhammadiyah 001 Melak</h1>
-                    <p class="text-xs text-emerald-200">E-Poling Kebijakan Pembelajaran Orang Tua / Wali Murid</p>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
+                        SD Muhammadiyah 001 Melak
+                    </h1>
+                    <p class="text-xs text-emerald-200/90 font-medium">Portal E-Poling Aspirasi Kebijakan Pembelajaran Orang Tua</p>
                 </div>
             </div>
-            <button onclick="toggleAdminSidebar()" class="no-print bg-emerald-700 hover:bg-emerald-600 text-emerald-100 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-emerald-600 shadow-sm">
-                <i class="fa-solid fa-lock"><span>Panel Admin</span></i>
+            <button onclick="toggleAdminSidebar()" class="no-print bg-white/10 hover:bg-white/20 text-white border border-white/25 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 flex items-center gap-2 shadow-sm active:scale-95">
+                <i class="fa-solid fa-shield-halved text-emerald-300"></i>
+                <span>Panel Administrator</span>
             </button>
         </div>
     </header>
 
-    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full">
-        <!-- Info Banner -->
-        <div class="bg-white border-l-4 border-emerald-600 p-5 rounded-r-xl shadow-sm mb-6">
-            <h2 class="font-semibold text-emerald-900 text-base mb-1">Assalamu'alaikum Warahmatullahi Wabarakatuh</h2>
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-10 flex-grow w-full">
+        
+        <!-- Announcement Banner -->
+        <div class="bg-white border border-slate-200/80 border-l-4 border-l-brand-600 p-6 rounded-2xl shadow-sm mb-8 relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-brand-50 rounded-full pointer-events-none opacity-50"></div>
+            <h2 class="font-bold text-slate-900 text-base mb-2 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-brand-600"></i> Assalamu'alaikum Warahmatullahi Wabarakatuh
+            </h2>
             <p class="text-sm text-slate-600 leading-relaxed">
-                Bapak/Ibu Orang Tua/Wali Murid yang kami hormati, poling ini diadakan untuk menjaring aspirasi dan suara mufakat terkait metode pembelajaran ke depan (Tatap Muka vs Daring/Online). Mohon isi data dengan jujur sesuai pilihan hati nurani demi kebaikan ananda tercinta.
+                Yth. Bapak/Ibu Orang Tua / Wali Murid SD Muhammadiyah 001 Melak. Poling resmi ini diselenggarakan untuk menjaring suara mufakat terkait metode pembelajaran ke depan (Tatap Muka vs Daring). Partisipasi dan kejujuran pilihan Bapak/Ibu sangat menentukan kebijakan terbaik demi kenyamanan serta prestasi ananda tercinta.
             </p>
         </div>
 
         <!-- Poling Card Form -->
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 px-6 py-4 text-white">
-                <h3 class="font-semibold text-lg flex items-center gap-2">
-                    <i class="fa-solid fa-square-poll-vertical"></i> Formulir Poling Suara
-                </h3>
+        <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200/80 overflow-hidden">
+            <div class="bg-gradient-to-r from-brand-800 to-brand-700 px-6 sm:px-8 py-5 text-white flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-lg flex items-center gap-2.5">
+                        <i class="fa-solid fa-square-poll-vertical"></i> Formulir Pengisian Suara
+                    </h3>
+                    <p class="text-xs text-brand-100 mt-0.5">Satu formulir untuk setiap siswa/anak</p>
+                </div>
+                <div class="hidden sm:flex bg-white/10 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15">
+                    Resmi & Rahasia
+                </div>
             </div>
 
             <form id="pollingForm" class="p-6 sm:p-8 space-y-6" onsubmit="submitPolling(event)">
                 <!-- Parent Name -->
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="parentName">Nama Lengkap Orang Tua / Wali <span class="text-red-500">*</span></label>
-                    <input type="text" id="parentName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Contoh: Bpk. Ahmad / Ibu Siti">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2" for="parentName">
+                        Nama Lengkap Orang Tua / Wali <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </span>
+                        <input type="text" id="parentName" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm transition bg-slate-50/50" placeholder="Contoh: Bpk. H. Abdullah / Ibu Siti Aminah">
+                    </div>
                 </div>
 
                 <!-- Student Name & Class Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5" for="studentName">Nama Lengkap Siswa/Anak <span class="text-red-500">*</span></label>
-                        <input type="text" id="studentName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Nama Siswa">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2" for="studentName">
+                            Nama Lengkap Siswa / Anak <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-child"></i>
+                            </span>
+                            <input type="text" id="studentName" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm transition bg-slate-50/50" placeholder="Nama Lengkap Anak">
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1.5" for="classRoom">Kelas Siswa <span class="text-red-500">*</span></label>
-                        <select id="classRoom" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-white transition">
-                            <option value="" disabled selected>-- Pilih Kelas --</option>
-                            <option value="Kelas 1">Kelas 1</option>
-                            <option value="Kelas 2">Kelas 2</option>
-                            <option value="Kelas 3">Kelas 3</option>
-                            <option value="Kelas 4">Kelas 4</option>
-                            <option value="Kelas 5">Kelas 5</option>
-                            <option value="Kelas 6">Kelas 6</option>
-                        </select>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2" for="classRoom">
+                            Kelas Siswa <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-school-flag"></i>
+                            </span>
+                            <select id="classRoom" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm bg-slate-50/50 transition cursor-pointer">
+                                <option value="" disabled selected>-- Pilih Kelas Siswa --</option>
+                                <option value="Kelas 1">Kelas 1</option>
+                                <option value="Kelas 2">Kelas 2</option>
+                                <option value="Kelas 3">Kelas 3</option>
+                                <option value="Kelas 4">Kelas 4</option>
+                                <option value="Kelas 5">Kelas 5</option>
+                                <option value="Kelas 6">Kelas 6</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Choice Selection Cards -->
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-2">Pilihan Metode Pembelajaran <span class="text-red-500">*</span></label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2.5">
+                        Pilihan Metode Pembelajaran <span class="text-red-500">*</span>
+                    </label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer hover:border-emerald-500 transition group bg-slate-50/50">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="text-emerald-700 font-bold text-lg"><i class="fa-solid fa-school"></i></div>
-                                <input type="radio" name="choice" value="Tatap Muka" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <label class="relative flex flex-col p-5 border-2 rounded-2xl cursor-pointer hover:border-brand-500 transition-all group bg-slate-50/70 hover:bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-brand-700 flex items-center justify-center text-lg font-bold">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                </div>
+                                <input type="radio" name="choice" value="Tatap Muka" required class="w-4 h-4 text-brand-600 focus:ring-brand-500">
                             </div>
-                            <span class="font-semibold text-slate-800 text-base">Pembelajaran Tatap Muka</span>
-                            <span class="text-xs text-slate-500 mt-1">Belajar langsung di sekolah dengan protokol kesehatan.</span>
+                            <span class="font-bold text-slate-800 text-base group-hover:text-brand-700 transition">Pembelajaran Tatap Muka</span>
+                            <span class="text-xs text-slate-500 mt-1 leading-relaxed">Belajar langsung di ruang kelas sekolah dengan prosedur yang berlaku.</span>
                         </label>
 
-                        <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer hover:border-emerald-500 transition group bg-slate-50/50">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="text-blue-600 font-bold text-lg"><i class="fa-solid fa-laptop-code"></i></div>
-                                <input type="radio" name="choice" value="Online (Daring)" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                        <label class="relative flex flex-col p-5 border-2 rounded-2xl cursor-pointer hover:border-brand-500 transition-all group bg-slate-50/70 hover:bg-white shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg font-bold">
+                                    <i class="fa-solid fa-laptop-code"></i>
+                                </div>
+                                <input type="radio" name="choice" value="Online (Daring)" required class="w-4 h-4 text-brand-600 focus:ring-brand-500">
                             </div>
-                            <span class="font-semibold text-slate-800 text-base">Pembelajaran Online (Daring)</span>
-                            <span class="text-xs text-slate-500 mt-1">Belajar jarak jauh dari rumah menggunakan gawai/laptop.</span>
+                            <span class="font-bold text-slate-800 text-base group-hover:text-blue-700 transition">Pembelajaran Online (Daring)</span>
+                            <span class="text-xs text-slate-500 mt-1 leading-relaxed">Belajar jarak jauh dari rumah menggunakan perangkat digital/gawai.</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Feedback Textarea -->
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="feedback">Kotak Masukan / Saran / Alasan (Opsional)</label>
-                    <textarea id="feedback" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Tuliskan saran, kendala, atau pertimbangan Anda di sini..."></textarea>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2" for="feedback">
+                        Kotak Masukan / Saran / Alasan <span class="text-slate-400 font-normal">(Opsional)</span>
+                    </label>
+                    <textarea id="feedback" rows="3" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm transition bg-slate-50/50" placeholder="Tuliskan saran, kendala, atau pertimbangan khusus di sini..."></textarea>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" id="submitBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 px-6 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                <button type="submit" id="submitBtn" class="w-full bg-brand-700 hover:bg-brand-800 active:scale-[0.99] text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-brand-700/20 flex items-center justify-center gap-2.5">
                     <span id="btnText">Kirim Pilihan Poling</span>
                     <i id="btnSpinner" class="fa-solid fa-spinner fa-spin hidden"></i>
                 </button>
@@ -155,89 +195,107 @@
     </main>
 
     <!-- Admin Sidebar Overlay -->
-    <div id="adminOverlay" class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity" onclick="toggleAdminSidebar()"></div>
+    <div id="adminOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity" onclick="toggleAdminSidebar()"></div>
 
     <!-- Admin Drawer -->
-    <div id="adminSidebar" class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+    <div id="adminSidebar" class="fixed top-0 right-0 h-full w-full sm:w-[520px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
         <!-- Admin Header -->
-        <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
-            <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Panel Admin & Rangkuman</h3>
-            <button onclick="toggleAdminSidebar()" class="text-emerald-200 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+        <div class="bg-brand-900 text-white p-5 px-6 flex justify-between items-center border-b border-brand-800">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center text-brand-300 font-bold">
+                    <i class="fa-solid fa-chart-pie"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base">Panel Administrator</h3>
+                    <p class="text-xs text-brand-200">Rekapitulasi Suara & Laporan Poling</p>
+                </div>
+            </div>
+            <button onclick="toggleAdminSidebar()" class="text-slate-300 hover:text-white p-2 rounded-lg hover:bg-white/10 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
 
         <!-- Admin Content Area -->
-        <div class="flex-grow overflow-y-auto p-6 space-y-6" id="printable-admin-area">
+        <div class="flex-grow overflow-y-auto p-6 space-y-6 bg-slate-50">
             
-            <!-- Auth Section (Pin Check) -->
-            <div id="adminAuthBox" class="space-y-4 py-8">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h4 class="font-semibold text-slate-800">Autentikasi Admin</h4>
-                    <p class="text-xs text-slate-500 mt-1">Masukkan PIN Admin untuk melihat hasil rekapitulasi poling.</p>
+            <!-- Auth Section -->
+            <div id="adminAuthBox" class="space-y-5 py-12 px-4 bg-white rounded-2xl border shadow-sm text-center">
+                <div class="w-14 h-14 bg-brand-50 text-brand-700 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold shadow-inner border border-brand-100">
+                    <i class="fa-solid fa-lock"></i>
                 </div>
                 <div>
-                    <input type="password" id="adminPin" placeholder="Masukkan PIN (Default: 001melak)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-center tracking-widest">
+                    <h4 class="font-bold text-slate-800 text-base">Autentikasi Diperlukan</h4>
+                    <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Masukkan PIN Admin untuk mengakses rekapitulasi data poling.</p>
                 </div>
-                <button onclick="verifyAdminPin()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 rounded-xl text-sm transition">Masuk Panel</button>
+                <div class="max-w-xs mx-auto">
+                    <input type="password" id="adminPin" placeholder="PIN Admin (Default: 001melak)" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-brand-500 outline-none text-center tracking-widest font-semibold bg-slate-50">
+                </div>
+                <div class="max-w-xs mx-auto">
+                    <button onclick="verifyAdminPin()" class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-xl text-sm transition shadow-md">Masuk Panel</button>
+                </div>
             </div>
 
-            <!-- Dashboard Content (Hidden by default) -->
+            <!-- Dashboard Content (Hidden initially) -->
             <div id="adminDashboardContent" class="hidden space-y-6">
-                <div class="flex justify-between items-center border-b pb-4">
+                
+                <div class="flex justify-between items-center bg-white p-4 rounded-2xl border shadow-sm">
                     <div>
-                        <h4 class="font-bold text-slate-800 text-base">SD Muhammadiyah 001 Melak</h4>
-                        <p class="text-xs text-slate-500">Laporan Hasil Poling Orang Tua</p>
+                        <h4 class="font-bold text-slate-800 text-sm">SD Muhammadiyah 001 Melak</h4>
+                        <p class="text-xs text-slate-500">Status Data: <span id="dataSourceLabel" class="font-semibold text-brand-600">Terhubung</span></p>
                     </div>
-                    <button onclick="fetchAdminData()" class="no-print bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+                    <button onclick="fetchAdminData()" class="no-print bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fa-solid fa-rotate"></i> Muat Ulang
                     </button>
                 </div>
 
                 <!-- Stats Summary Cards -->
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
-                        <p class="text-xs text-emerald-600 font-medium">Total Suara Masuk</p>
-                        <h3 id="statTotal" class="text-2xl font-bold text-emerald-900 mt-1">0</h3>
+                    <div class="bg-white border p-4 rounded-2xl shadow-sm text-center flex flex-col justify-center">
+                        <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Suara</span>
+                        <h3 id="statTotal" class="text-3xl font-extrabold text-brand-800 mt-1">0</h3>
                     </div>
-                    <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl text-center">
-                        <p class="text-xs text-blue-600 font-medium">Tatap Muka vs Daring</p>
-                        <div class="text-xs font-bold text-blue-900 mt-2 flex justify-around">
-                            <span>TM: <span id="statTatapCount">0</span></span>
-                            <span>Online: <span id="statOnlineCount">0</span></span>
+                    <div class="bg-white border p-4 rounded-2xl shadow-sm space-y-1.5">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-emerald-700">Tatap Muka:</span>
+                            <span id="statTatapCount" class="font-bold text-slate-800">0</span>
+                        </div>
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-blue-700">Daring/Online:</span>
+                            <span id="statOnlineCount" class="font-bold text-slate-800">0</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Percentage Bar Breakdown -->
-                <div class="bg-white border rounded-xl p-4 space-y-3">
-                    <h5 class="font-semibold text-xs text-slate-500 uppercase tracking-wider">Persentase Pilihan</h5>
+                <div class="bg-white border rounded-2xl p-5 space-y-4 shadow-sm">
+                    <h5 class="font-bold text-xs text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar text-brand-600"></i> Persentase Pilihan Pemilih
+                    </h5>
                     <div>
-                        <div class="flex justify-between text-xs font-medium mb-1">
+                        <div class="flex justify-between text-xs font-bold mb-1.5">
                             <span class="text-emerald-700">Tatap Muka (<span id="pctTatap">0%</span>)</span>
-                            <span class="text-blue-700">Online/Daring (<span id="pctOnline">0%</span>)</span>
+                            <span class="text-blue-700">Online (<span id="pctOnline">0%</span>)</span>
                         </div>
-                        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden flex">
-                            <div id="barTatap" class="bg-emerald-600 h-full transition-all duration-500" style="width: 0%"></div>
-                            <div id="barOnline" class="bg-blue-600 h-full transition-all duration-500" style="width: 0%"></div>
+                        <div class="w-full bg-slate-200 h-3.5 rounded-full overflow-hidden flex p-0.5 border border-slate-200">
+                            <div id="barTatap" class="bg-emerald-500 h-full rounded-l-full transition-all duration-500" style="width: 0%"></div>
+                            <div id="barOnline" class="bg-blue-500 h-full rounded-r-full transition-all duration-500" style="width: 0%"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Feedbacks / Suggestions List -->
-                <div class="space-y-3">
-                    <h5 class="font-semibold text-xs text-slate-500 uppercase tracking-wider">Kotak Masukan & Saran Ortu</h5>
-                    <div id="feedbackListContainer" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                        <!-- Loaded dynamically -->
-                        <div class="text-xs text-slate-400 italic text-center py-4">Belum ada masukan tercatat.</div>
+                <!-- Feedbacks List -->
+                <div class="bg-white border rounded-2xl p-5 space-y-3 shadow-sm">
+                    <h5 class="font-bold text-xs text-slate-600 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-brand-600"></i> Masukan & Saran Orang Tua
+                    </h5>
+                    <div id="feedbackListContainer" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                        <div class="text-xs text-slate-400 italic text-center py-6">Belum ada masukan tercatat.</div>
                     </div>
                 </div>
 
                 <!-- Print Report Button -->
-                <div class="pt-4 no-print">
-                    <button onclick="window.print()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-print"><span>Cetak Rangkuman Laporan</span></i>
+                <div class="pt-2 no-print">
+                    <button onclick="triggerPrintReport()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak Rangkuman Laporan Resmi</span>
                     </button>
                 </div>
             </div>
@@ -245,13 +303,74 @@
         </div>
     </div>
 
-    <!-- Custom Modal for Alerts -->
-    <div id="customModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl animate-scaleIn">
-            <div id="modalIcon" class="w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl"></div>
+    <!-- HIDDEN OFFICIAL PRINTABLE REPORT CONTAINER -->
+    <div id="printReportContainer" class="hidden">
+        <div style="font-family: 'Inter', Arial, sans-serif; max-width: 800px; margin: 0 auto; color: #1e293b; padding: 20px;">
+            <div style="border-bottom: 3px double #065f46; padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <h2 style="margin: 0; font-size: 18px; font-weight: bold; color: #065f46; text-transform: uppercase;">Yayasan Muhammadiyah</h2>
+                    <h1 style="margin: 2px 0; font-size: 22px; font-weight: 800; color: #0f172a;">SD MUHAMMADIYAH 001 MELAK</h1>
+                    <p style="margin: 2px 0; font-size: 11px; color: #64748b;">Laporan Resmi Rekapitulasi E-Poling Aspirasi Pembelajaran Orang Tua</p>
+                </div>
+                <div style="text-align: right; font-size: 11px; color: #475569;">
+                    <p style="margin: 0;"><b>Tanggal Cetak:</b> <span id="printDate"></span></p>
+                    <p style="margin: 2px 0;"><b>Status:</b> Dokumen Resmi Sekolah</p>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #334155; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">I. Ringkasan Statistik Suara</h3>
+                <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                    <tr>
+                        <td style="padding: 6px 0; width: 40%;">Total Responden / Suara Masuk:</td>
+                        <td style="padding: 6px 0; font-weight: bold;" id="printTotalVotes">0 Suara</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;">Pemilih Tatap Muka:</td>
+                        <td style="padding: 6px 0; font-weight: bold; color: #059669;" id="printTatapCount">0 (<span id="printTatapPct">0%</span>)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 6px 0;">Pemilih Online / Daring:</td>
+                        <td style="padding: 6px 0; font-weight: bold; color: #2563eb;" id="printOnlineCount">0 (<span id="printOnlinePct">0%</span>)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <h3 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; color: #334155; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">II. Daftar Rincian Pilihan & Masukan Wali Murid</h3>
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead>
+                        <tr style="background: #065f46; color: white;">
+                            <th style="padding: 8px; border: 1px solid #047857; text-align: center; width: 35px;">No</th>
+                            <th style="padding: 8px; border: 1px solid #047857; text-align: left;">Nama Orang Tua</th>
+                            <th style="padding: 8px; border: 1px solid #047857; text-align: left;">Nama Siswa & Kelas</th>
+                            <th style="padding: 8px; border: 1px solid #047857; text-align: center;">Pilihan</th>
+                            <th style="padding: 8px; border: 1px solid #047857; text-align: left;">Masukan / Saran</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printTableBody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 40px; display: flex; justify-content: flex-end; font-size: 12px;">
+                <div style="text-align: center; width: 220px;">
+                    <p style="margin: 0 0 65px 0;">Mengetahui,<br>Kepala SD Muhammadiyah 001 Melak</p>
+                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">Kepala Sekolah, S.Pd.</p>
+                    <p style="margin: 2px 0 0 0; font-size: 10px; color: #64748b;">NIP. 19700101XXXXXXXXXX</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="customModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border">
+            <div id="modalIcon" class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto text-xl"></div>
             <h4 id="modalTitle" class="font-bold text-lg text-slate-800"></h4>
-            <p id="modalMessage" class="text-sm text-slate-600"></p>
-            <button onclick="closeModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl font-medium text-sm transition">Tutup</button>
+            <p id="modalMessage" class="text-sm text-slate-600 leading-relaxed"></p>
+            <button onclick="closeModal()" class="w-full bg-brand-700 hover:bg-brand-800 text-white py-3 rounded-xl font-semibold text-sm transition shadow-md">Tutup</button>
         </div>
     </div>
 
@@ -263,9 +382,11 @@
     <script>
         /* ==========================================================================
            KONFIGURASI GOOGLE APPS SCRIPT URL
-           Silakan masukkan URL Deployment Web App Google Apps Script Anda di bawah ini:
+           Masukkan URL Web App Google Apps Script Anda di bawah ini:
            ========================================================================== */
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl3V2Qjl9igHBq6UGGqMwKi-rVWLRQznwxb1CEEKBIeMjbhdvtq8DoGGU1xQWcK2hftQ/exec";
+
+        let cachedRecords = [];
 
         // Handle Form Submission
         async function submitPolling(event) {
@@ -287,42 +408,29 @@
             const btnText = document.getElementById('btnText');
             const btnSpinner = document.getElementById('btnSpinner');
 
-            // UI loading state
             submitBtn.disabled = true;
-            btnText.textContent = "Mengirim...";
+            btnText.textContent = "Mengirim Suara...";
             btnSpinner.classList.remove('hidden');
 
-            const payload = {
-                parentName,
-                studentName,
-                classRoom,
-                choice,
-                feedback
-            };
+            const payload = { parentName, studentName, classRoom, choice, feedback };
 
             try {
                 if (APPS_SCRIPT_URL.includes("PASTE_YOUR_")) {
-                    // Fallback simulation mode if URL not yet configured
-                    await new Promise(r => setTimeout(r, 1000));
-                    // Save locally for demo preview
-                    let localData = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+                    await new Promise(r => setTimeout(r, 800));
+                    let localData = JSON.parse(localStorage.getItem('sd_muh_polls_pro') || '[]');
                     localData.push({ timestamp: new Date().toISOString(), ...payload });
-                    localStorage.setItem('sd_muh_polls', JSON.stringify(localData));
-
-                    showModal('Berhasil!', 'Terima kasih, pilihan poling Anda telah berhasil terekam.', 'success');
-                    document.getElementById('pollingForm').reset();
+                    localStorage.setItem('sd_muh_polls_pro', JSON.stringify(localData));
                 } else {
-                    // Send to Google Apps Script
                     await fetch(APPS_SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'no-cors', // standard for GAS webapps
+                        mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-
-                    showModal('Berhasil!', 'Terima kasih, pilihan poling Anda telah berhasil disimpan ke database pusat.', 'success');
-                    document.getElementById('pollingForm').reset();
                 }
+
+                showModal('Terima Kasih!', 'Pilihan dan aspirasi poling Anda telah berhasil direkam.', 'success');
+                document.getElementById('pollingForm').reset();
             } catch (error) {
                 console.error(error);
                 showModal('Gagal', 'Terjadi kesalahan saat mengirim data. Silakan coba lagi.', 'error');
@@ -348,7 +456,7 @@
             }
         }
 
-        // Verify Admin PIN
+        // Verify PIN
         function verifyAdminPin() {
             const pin = document.getElementById('adminPin').value;
             if (pin === "001melak" || pin === "admin123") {
@@ -360,23 +468,26 @@
             }
         }
 
-        // Fetch Data for Admin Dashboard
+        // Fetch Data for Dashboard & Reports
         async function fetchAdminData() {
             let records = [];
+            const dataSourceLabel = document.getElementById('dataSourceLabel');
 
             if (APPS_SCRIPT_URL.includes("PASTE_YOUR_")) {
-                // Fetch from localStorage if in simulation mode
-                records = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+                dataSourceLabel.textContent = "Mode Simulasi (Lokal)";
+                records = JSON.parse(localStorage.getItem('sd_muh_polls_pro') || '[]');
             } else {
+                dataSourceLabel.textContent = "Google Sheet Database";
                 try {
                     const response = await fetch(APPS_SCRIPT_URL);
                     records = await response.json();
                 } catch (e) {
                     console.error("Gagal mengambil data dari Google Sheet", e);
-                    records = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+                    records = JSON.parse(localStorage.getItem('sd_muh_polls_pro') || '[]');
                 }
             }
 
+            cachedRecords = records;
             processAnalytics(records);
         }
 
@@ -386,8 +497,9 @@
             let tatapCount = 0;
             let onlineCount = 0;
             let feedbackHtml = "";
+            let printTableHtml = "";
 
-            records.forEach(item => {
+            records.forEach((item, index) => {
                 if (item.choice === "Tatap Muka") {
                     tatapCount++;
                 } else if (item.choice === "Online (Daring)") {
@@ -396,19 +508,33 @@
 
                 if (item.feedback && item.feedback.trim() !== "") {
                     feedbackHtml += `
-                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs space-y-1">
-                            <div class="flex justify-between font-semibold text-slate-700">
-                                <span>${escapeHtml(item.parentName)} (${escapeHtml(item.classRoom)})</span>
-                                <span class="text-emerald-700 font-normal">${escapeHtml(item.choice)}</span>
+                        <div class="bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl text-xs space-y-1">
+                            <div class="flex justify-between font-bold text-slate-700">
+                                <span>${escapeHtml(item.parentName)} <span class="font-normal text-slate-500">(${escapeHtml(item.classRoom)})</span></span>
+                                <span class="text-brand-700 font-semibold">${escapeHtml(item.choice)}</span>
                             </div>
                             <p class="text-slate-600 italic">"${escapeHtml(item.feedback)}"</p>
                         </div>
                     `;
                 }
+
+                printTableHtml += `
+                    <tr>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">${index + 1}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(item.parentName)}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(item.studentName)} (${escapeHtml(item.classRoom)})</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center; font-weight: bold; color: ${item.choice === 'Tatap Muka' ? '#059669' : '#2563eb'};">${escapeHtml(item.choice)}</td>
+                        <td style="padding: 6px 8px; border: 1px solid #cbd5e1;">${escapeHtml(item.feedback || '-')}</td>
+                    </tr>
+                `;
             });
 
             if (feedbackHtml === "") {
-                feedbackHtml = `<div class="text-xs text-slate-400 italic text-center py-4">Belum ada masukan tercatat.</div>`;
+                feedbackHtml = `<div class="text-xs text-slate-400 italic text-center py-6">Belum ada masukan tercatat.</div>`;
+            }
+
+            if (printTableHtml === "") {
+                printTableHtml = `<tr><td colspan="5" style="text-align: center; padding: 12px; border: 1px solid #cbd5e1;">Belum ada data poling.</td></tr>`;
             }
 
             const pctTatap = total > 0 ? ((tatapCount / total) * 100).toFixed(1) : 0;
@@ -425,30 +551,41 @@
             document.getElementById('barOnline').style.width = pctOnline + '%';
 
             document.getElementById('feedbackListContainer').innerHTML = feedbackHtml;
+
+            // Populate Print Template
+            document.getElementById('printTotalVotes').textContent = total + " Suara";
+            document.getElementById('printTatapCount').textContent = tatapCount + " Suara";
+            document.getElementById('printTatapPct').textContent = pctTatap + "%";
+            document.getElementById('printOnlineCount').textContent = onlineCount + " Suara";
+            document.getElementById('printOnlinePct').textContent = pctOnline + "%";
+            document.getElementById('printTableBody').innerHTML = printTableHtml;
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
 
-        // Helper escape HTML to prevent XSS
+        // Trigger Printable Report
+        function triggerPrintReport() {
+            window.print();
+        }
+
+        // Escape HTML
         function escapeHtml(str) {
             if (!str) return '';
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Custom Modal helper
+        // Modal Helpers
         function showModal(title, message, type) {
             const modal = document.getElementById('customModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalMessage = document.getElementById('modalMessage');
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
             const modalIcon = document.getElementById('modalIcon');
 
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-
             if (type === 'success') {
-                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-emerald-100 text-emerald-600 fa-solid fa-check";
+                modalIcon.className = "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto text-xl bg-emerald-100 text-emerald-600 fa-solid fa-check";
             } else if (type === 'error') {
-                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-red-100 text-red-600 fa-solid fa-triangle-exclamation";
+                modalIcon.className = "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto text-xl bg-red-100 text-red-600 fa-solid fa-triangle-exclamation";
             } else {
-                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-amber-100 text-amber-600 fa-solid fa-circle-exclamation";
+                modalIcon.className = "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto text-xl bg-amber-100 text-amber-600 fa-solid fa-circle-exclamation";
             }
 
             modal.classList.remove('hidden');

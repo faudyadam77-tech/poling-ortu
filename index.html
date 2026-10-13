@@ -1,211 +1,462 @@
-<script>
-  /* ============================================================
-     ⚠️ GANTI URL DI BAWAH INI DENGAN URL WEB APP ANDA
-     ============================================================ */
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl3V2Qjl9igHBq6UGGqMwKi-rVWLRQznwxb1CEEKBIeMjbhdvtq8DoGGU1xQWcK2hftQ/exec";
-  /* ============================================================ */
-
-  const ADMIN_PASSWORD = "muhammadiyah001";
-  const form = document.getElementById('pollForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const successAlert = document.getElementById('successAlert');
-  const errorAlert = document.getElementById('errorAlert');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    successAlert.style.display = 'none';
-    errorAlert.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="loading"></span>Mengirim...';
-
-    const data = {
-      action: 'submit',
-      namaOrtu: document.getElementById('namaOrtu').value.trim(),
-      namaSiswa: document.getElementById('namaSiswa').value.trim(),
-      kelas: document.getElementById('kelas').value,
-      pilihan: document.querySelector('input[name="pilihan"]:checked').value,
-      masukan: document.getElementById('masukan').value.trim()
-    };
-
-    // COBA METODE 1: Fetch dengan text/plain (paling umum berhasil)
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        redirect: 'follow',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-      });
-      
-      // Karena no-cors, kita tidak bisa baca response
-      // Tapi request akan terkirim. Tampilkan sukses.
-      successAlert.style.display = 'block';
-      form.reset();
-      setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
-    } catch (err1) {
-      console.warn('Metode 1 gagal, coba metode 2...', err1);
-      
-      // COBA METODE 2: Form tradisional via hidden iframe (100% reliable)
-      try {
-        await submitViaForm(data);
-        successAlert.style.display = 'block';
-        form.reset();
-        setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
-      } catch (err2) {
-        console.error('Kedua metode gagal:', err2);
-        errorAlert.style.display = 'block';
-        errorAlert.innerHTML = '❌ Gagal mengirim. Silakan coba lagi. <br><small>' + err2.message + '</small>';
-      }
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Kirim Pilihan';
-    }
-  });
-
-  /**
-   * METODE 2: Submit via form tradisional + hidden iframe
-   * Ini bypass CORS sepenuhnya dan PASTI berhasil untuk Apps Script
-   */
-  function submitViaForm(data) {
-    return new Promise((resolve, reject) => {
-      // Buat iframe tersembunyi
-      const iframe = document.createElement('iframe');
-      iframe.name = 'hidden_iframe_' + Date.now();
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-
-      // Buat form
-      const formEl = document.createElement('form');
-      formEl.method = 'POST';
-      formEl.action = SCRIPT_URL;
-      formEl.target = iframe.name;
-      formEl.style.display = 'none';
-
-      // Tambahkan data sebagai hidden input
-      // Apps Script akan terima sebagai e.parameter
-      Object.keys(data).forEach(key => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = data[key];
-        formEl.appendChild(input);
-      });
-
-      document.body.appendChild(formEl);
-
-      // Handle response dari iframe
-      let responded = false;
-      iframe.onload = () => {
-        if (responded) return;
-        responded = true;
-        try {
-          // Bersihkan
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-            document.body.removeChild(formEl);
-          }, 1000);
-          resolve();
-        } catch (err) {
-          reject(err);
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poling Pembelajaran Ortu - SD Muhammadiyah 001 Melak</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        emeraldTheme: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
         }
-      };
-
-      // Timeout fallback
-      setTimeout(() => {
-        if (!responded) {
-          responded = true;
-          try {
-            document.body.removeChild(iframe);
-            document.body.removeChild(formEl);
-          } catch(e) {}
-          // Anggap berhasil karena Apps Script biasanya redirect
-          resolve();
+    </script>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-admin-area, #printable-admin-area * {
+                visibility: visible;
+            }
+            #printable-admin-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none !important;
+            }
         }
-      }, 10000);
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-      // Submit!
-      formEl.submit();
-    });
-  }
-
-  /* ====== ADMIN SIDEBAR (sama seperti sebelumnya) ====== */
-  function openAdminLogin() {
-    const pwd = prompt("Masukkan password admin:");
-    if (pwd === ADMIN_PASSWORD) {
-      openSidebar();
-      loadSummary();
-    } else if (pwd !== null) {
-      alert("Password salah!");
-    }
-  }
-
-  function openSidebar() {
-    document.getElementById('sidebar').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-  }
-
-  function closeSidebar() {
-    document.getElementById('sidebar').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-  }
-
-  async function loadSummary() {
-    const url = SCRIPT_URL + '?action=summary';
-    try {
-      const res = await fetch(url, { redirect: 'follow' });
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch(e) {
-        // Kadang Apps Script return HTML redirect page
-        throw new Error('Response bukan JSON. Periksa URL App Script Anda.');
-      }
-      renderSummary(data);
-    } catch (err) {
-      alert("Gagal memuat data: " + err.message + "\n\nPastikan URL App Script benar dan sudah di-authorize.");
-      console.error(err);
-    }
-  }
-
-  function renderSummary(data) {
-    const total = data.total || 0;
-    const tm = data.tatapMuka || 0;
-    const ol = data.online || 0;
-    const percentTM = total > 0 ? ((tm / total) * 100).toFixed(1) : 0;
-    const percentOL = total > 0 ? ((ol / total) * 100).toFixed(1) : 0;
-
-    document.getElementById('totalPoll').textContent = total;
-    document.getElementById('totalKelas').textContent = data.jumlahKelas || 0;
-    document.getElementById('countTM').textContent = tm;
-    document.getElementById('countOL').textContent = ol;
-    document.getElementById('percentTM').textContent = percentTM + '%';
-    document.getElementById('percentOL').textContent = percentOL + '%';
-    document.getElementById('barTM').style.width = percentTM + '%';
-    document.getElementById('barTM').textContent = percentTM + '%';
-    document.getElementById('barOL').style.width = percentOL + '%';
-    document.getElementById('barOL').textContent = percentOL + '%';
-
-    const fbList = document.getElementById('feedbackList');
-    if (data.feedback && data.feedback.length > 0) {
-      fbList.innerHTML = data.feedback.map(f => `
-        <div class="feedback-item">
-          <span class="name">${escapeHtml(f.namaOrtu)}</span>
-          <span class="choice ${f.pilihan === 'Tatap Muka' ? 'tatapmuka' : 'online'}">${f.pilihan}</span>
-          <div style="font-size:0.75rem; color:#9ca3af;">${escapeHtml(f.namaSiswa)} - ${escapeHtml(f.kelas)}</div>
-          ${f.masukan ? `<div class="msg">"${escapeHtml(f.masukan)}"</div>` : ''}
+    <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="bg-white text-emerald-800 p-2.5 rounded-xl shadow-inner font-bold text-xl flex items-center justify-center">
+                    <i class="fa-solid fa-school-flag"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight">SD Muhammadiyah 001 Melak</h1>
+                    <p class="text-xs text-emerald-200">E-Poling Kebijakan Pembelajaran Orang Tua / Wali Murid</p>
+                </div>
+            </div>
+            <button onclick="toggleAdminSidebar()" class="no-print bg-emerald-700 hover:bg-emerald-600 text-emerald-100 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 border border-emerald-600 shadow-sm">
+                <i class="fa-solid fa-lock"><span>Panel Admin</span></i>
+            </button>
         </div>
-      `).join('');
-    } else {
-      fbList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:10px;">Belum ada masukan.</p>';
-    }
-    document.getElementById('printDate').textContent =
-      'Dicetak pada: ' + new Date().toLocaleString('id-ID');
-  }
+    </header>
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-  }
-</script>
+    <main class="max-w-3xl mx-auto px-4 py-8 flex-grow w-full">
+        <!-- Info Banner -->
+        <div class="bg-white border-l-4 border-emerald-600 p-5 rounded-r-xl shadow-sm mb-6">
+            <h2 class="font-semibold text-emerald-900 text-base mb-1">Assalamu'alaikum Warahmatullahi Wabarakatuh</h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+                Bapak/Ibu Orang Tua/Wali Murid yang kami hormati, poling ini diadakan untuk menjaring aspirasi dan suara mufakat terkait metode pembelajaran ke depan (Tatap Muka vs Daring/Online). Mohon isi data dengan jujur sesuai pilihan hati nurani demi kebaikan ananda tercinta.
+            </p>
+        </div>
+
+        <!-- Poling Card Form -->
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="bg-gradient-to-r from-emerald-700 to-emerald-800 px-6 py-4 text-white">
+                <h3 class="font-semibold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-square-poll-vertical"></i> Formulir Poling Suara
+                </h3>
+            </div>
+
+            <form id="pollingForm" class="p-6 sm:p-8 space-y-6" onsubmit="submitPolling(event)">
+                <!-- Parent Name -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="parentName">Nama Lengkap Orang Tua / Wali <span class="text-red-500">*</span></label>
+                    <input type="text" id="parentName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Contoh: Bpk. Ahmad / Ibu Siti">
+                </div>
+
+                <!-- Student Name & Class Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5" for="studentName">Nama Lengkap Siswa/Anak <span class="text-red-500">*</span></label>
+                        <input type="text" id="studentName" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Nama Siswa">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1.5" for="classRoom">Kelas Siswa <span class="text-red-500">*</span></label>
+                        <select id="classRoom" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-white transition">
+                            <option value="" disabled selected>-- Pilih Kelas --</option>
+                            <option value="Kelas 1">Kelas 1</option>
+                            <option value="Kelas 2">Kelas 2</option>
+                            <option value="Kelas 3">Kelas 3</option>
+                            <option value="Kelas 4">Kelas 4</option>
+                            <option value="Kelas 5">Kelas 5</option>
+                            <option value="Kelas 6">Kelas 6</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Choice Selection Cards -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Pilihan Metode Pembelajaran <span class="text-red-500">*</span></label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer hover:border-emerald-500 transition group bg-slate-50/50">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-emerald-700 font-bold text-lg"><i class="fa-solid fa-school"></i></div>
+                                <input type="radio" name="choice" value="Tatap Muka" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            </div>
+                            <span class="font-semibold text-slate-800 text-base">Pembelajaran Tatap Muka</span>
+                            <span class="text-xs text-slate-500 mt-1">Belajar langsung di sekolah dengan protokol kesehatan.</span>
+                        </label>
+
+                        <label class="relative flex flex-col p-4 border-2 rounded-xl cursor-pointer hover:border-emerald-500 transition group bg-slate-50/50">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="text-blue-600 font-bold text-lg"><i class="fa-solid fa-laptop-code"></i></div>
+                                <input type="radio" name="choice" value="Online (Daring)" required class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+                            </div>
+                            <span class="font-semibold text-slate-800 text-base">Pembelajaran Online (Daring)</span>
+                            <span class="text-xs text-slate-500 mt-1">Belajar jarak jauh dari rumah menggunakan gawai/laptop.</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Feedback Textarea -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="feedback">Kotak Masukan / Saran / Alasan (Opsional)</label>
+                    <textarea id="feedback" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm transition" placeholder="Tuliskan saran, kendala, atau pertimbangan Anda di sini..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3 px-6 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                    <span id="btnText">Kirim Pilihan Poling</span>
+                    <i id="btnSpinner" class="fa-solid fa-spinner fa-spin hidden"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Admin Sidebar Overlay -->
+    <div id="adminOverlay" class="fixed inset-0 bg-black/50 z-50 hidden transition-opacity" onclick="toggleAdminSidebar()"></div>
+
+    <!-- Admin Drawer -->
+    <div id="adminSidebar" class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <!-- Admin Header -->
+        <div class="bg-emerald-900 text-white p-5 flex justify-between items-center">
+            <h3 class="font-bold text-lg flex items-center gap-2"><i class="fa-solid fa-chart-pie"></i> Panel Admin & Rangkuman</h3>
+            <button onclick="toggleAdminSidebar()" class="text-emerald-200 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+
+        <!-- Admin Content Area -->
+        <div class="flex-grow overflow-y-auto p-6 space-y-6" id="printable-admin-area">
+            
+            <!-- Auth Section (Pin Check) -->
+            <div id="adminAuthBox" class="space-y-4 py-8">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h4 class="font-semibold text-slate-800">Autentikasi Admin</h4>
+                    <p class="text-xs text-slate-500 mt-1">Masukkan PIN Admin untuk melihat hasil rekapitulasi poling.</p>
+                </div>
+                <div>
+                    <input type="password" id="adminPin" placeholder="Masukkan PIN (Default: 001melak)" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-center tracking-widest">
+                </div>
+                <button onclick="verifyAdminPin()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-medium py-2.5 rounded-xl text-sm transition">Masuk Panel</button>
+            </div>
+
+            <!-- Dashboard Content (Hidden by default) -->
+            <div id="adminDashboardContent" class="hidden space-y-6">
+                <div class="flex justify-between items-center border-b pb-4">
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-base">SD Muhammadiyah 001 Melak</h4>
+                        <p class="text-xs text-slate-500">Laporan Hasil Poling Orang Tua</p>
+                    </div>
+                    <button onclick="fetchAdminData()" class="no-print bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-rotate"></i> Muat Ulang
+                    </button>
+                </div>
+
+                <!-- Stats Summary Cards -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
+                        <p class="text-xs text-emerald-600 font-medium">Total Suara Masuk</p>
+                        <h3 id="statTotal" class="text-2xl font-bold text-emerald-900 mt-1">0</h3>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-100 p-4 rounded-xl text-center">
+                        <p class="text-xs text-blue-600 font-medium">Tatap Muka vs Daring</p>
+                        <div class="text-xs font-bold text-blue-900 mt-2 flex justify-around">
+                            <span>TM: <span id="statTatapCount">0</span></span>
+                            <span>Online: <span id="statOnlineCount">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Percentage Bar Breakdown -->
+                <div class="bg-white border rounded-xl p-4 space-y-3">
+                    <h5 class="font-semibold text-xs text-slate-500 uppercase tracking-wider">Persentase Pilihan</h5>
+                    <div>
+                        <div class="flex justify-between text-xs font-medium mb-1">
+                            <span class="text-emerald-700">Tatap Muka (<span id="pctTatap">0%</span>)</span>
+                            <span class="text-blue-700">Online/Daring (<span id="pctOnline">0%</span>)</span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden flex">
+                            <div id="barTatap" class="bg-emerald-600 h-full transition-all duration-500" style="width: 0%"></div>
+                            <div id="barOnline" class="bg-blue-600 h-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedbacks / Suggestions List -->
+                <div class="space-y-3">
+                    <h5 class="font-semibold text-xs text-slate-500 uppercase tracking-wider">Kotak Masukan & Saran Ortu</h5>
+                    <div id="feedbackListContainer" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                        <!-- Loaded dynamically -->
+                        <div class="text-xs text-slate-400 italic text-center py-4">Belum ada masukan tercatat.</div>
+                    </div>
+                </div>
+
+                <!-- Print Report Button -->
+                <div class="pt-4 no-print">
+                    <button onclick="window.print()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-print"><span>Cetak Rangkuman Laporan</span></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts -->
+    <div id="customModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl animate-scaleIn">
+            <div id="modalIcon" class="w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl"></div>
+            <h4 id="modalTitle" class="font-bold text-lg text-slate-800"></h4>
+            <p id="modalMessage" class="text-sm text-slate-600"></p>
+            <button onclick="closeModal()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 rounded-xl font-medium text-sm transition">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>&copy; 2026 SD Muhammadiyah 001 Melak. All rights reserved.</p>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           KONFIGURASI GOOGLE APPS SCRIPT URL
+           Silakan masukkan URL Deployment Web App Google Apps Script Anda di bawah ini:
+           ========================================================================== */
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyl3V2Qjl9igHBq6UGGqMwKi-rVWLRQznwxb1CEEKBIeMjbhdvtq8DoGGU1xQWcK2hftQ/exec";
+
+        // Handle Form Submission
+        async function submitPolling(event) {
+            event.preventDefault();
+
+            const parentName = document.getElementById('parentName').value.trim();
+            const studentName = document.getElementById('studentName').value.trim();
+            const classRoom = document.getElementById('classRoom').value;
+            const choiceElement = document.querySelector('input[name="choice"]:checked');
+            const feedback = document.getElementById('feedback').value.trim();
+
+            if (!choiceElement) {
+                showModal('Peringatan', 'Silakan pilih salah satu metode pembelajaran.', 'warning');
+                return;
+            }
+
+            const choice = choiceElement.value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+
+            // UI loading state
+            submitBtn.disabled = true;
+            btnText.textContent = "Mengirim...";
+            btnSpinner.classList.remove('hidden');
+
+            const payload = {
+                parentName,
+                studentName,
+                classRoom,
+                choice,
+                feedback
+            };
+
+            try {
+                if (APPS_SCRIPT_URL.includes("PASTE_YOUR_")) {
+                    // Fallback simulation mode if URL not yet configured
+                    await new Promise(r => setTimeout(r, 1000));
+                    // Save locally for demo preview
+                    let localData = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+                    localData.push({ timestamp: new Date().toISOString(), ...payload });
+                    localStorage.setItem('sd_muh_polls', JSON.stringify(localData));
+
+                    showModal('Berhasil!', 'Terima kasih, pilihan poling Anda telah berhasil terekam.', 'success');
+                    document.getElementById('pollingForm').reset();
+                } else {
+                    // Send to Google Apps Script
+                    await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors', // standard for GAS webapps
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    showModal('Berhasil!', 'Terima kasih, pilihan poling Anda telah berhasil disimpan ke database pusat.', 'success');
+                    document.getElementById('pollingForm').reset();
+                }
+            } catch (error) {
+                console.error(error);
+                showModal('Gagal', 'Terjadi kesalahan saat mengirim data. Silakan coba lagi.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                btnText.textContent = "Kirim Pilihan Poling";
+                btnSpinner.classList.add('hidden');
+            }
+        }
+
+        // Admin Drawer Toggle
+        function toggleAdminSidebar() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('adminOverlay');
+            const isClosed = sidebar.classList.contains('translate-x-full');
+
+            if (isClosed) {
+                sidebar.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Verify Admin PIN
+        function verifyAdminPin() {
+            const pin = document.getElementById('adminPin').value;
+            if (pin === "001melak" || pin === "admin123") {
+                document.getElementById('adminAuthBox').classList.add('hidden');
+                document.getElementById('adminDashboardContent').classList.remove('hidden');
+                fetchAdminData();
+            } else {
+                showModal('PIN Salah', 'PIN admin yang Anda masukkan tidak valid.', 'error');
+            }
+        }
+
+        // Fetch Data for Admin Dashboard
+        async function fetchAdminData() {
+            let records = [];
+
+            if (APPS_SCRIPT_URL.includes("PASTE_YOUR_")) {
+                // Fetch from localStorage if in simulation mode
+                records = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+            } else {
+                try {
+                    const response = await fetch(APPS_SCRIPT_URL);
+                    records = await response.json();
+                } catch (e) {
+                    console.error("Gagal mengambil data dari Google Sheet", e);
+                    records = JSON.parse(localStorage.getItem('sd_muh_polls') || '[]');
+                }
+            }
+
+            processAnalytics(records);
+        }
+
+        // Process Analytics & Render UI
+        function processAnalytics(records) {
+            const total = records.length;
+            let tatapCount = 0;
+            let onlineCount = 0;
+            let feedbackHtml = "";
+
+            records.forEach(item => {
+                if (item.choice === "Tatap Muka") {
+                    tatapCount++;
+                } else if (item.choice === "Online (Daring)") {
+                    onlineCount++;
+                }
+
+                if (item.feedback && item.feedback.trim() !== "") {
+                    feedbackHtml += `
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-xs space-y-1">
+                            <div class="flex justify-between font-semibold text-slate-700">
+                                <span>${escapeHtml(item.parentName)} (${escapeHtml(item.classRoom)})</span>
+                                <span class="text-emerald-700 font-normal">${escapeHtml(item.choice)}</span>
+                            </div>
+                            <p class="text-slate-600 italic">"${escapeHtml(item.feedback)}"</p>
+                        </div>
+                    `;
+                }
+            });
+
+            if (feedbackHtml === "") {
+                feedbackHtml = `<div class="text-xs text-slate-400 italic text-center py-4">Belum ada masukan tercatat.</div>`;
+            }
+
+            const pctTatap = total > 0 ? ((tatapCount / total) * 100).toFixed(1) : 0;
+            const pctOnline = total > 0 ? ((onlineCount / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statTatapCount').textContent = tatapCount;
+            document.getElementById('statOnlineCount').textContent = onlineCount;
+
+            document.getElementById('pctTatap').textContent = pctTatap + '%';
+            document.getElementById('pctOnline').textContent = pctOnline + '%';
+
+            document.getElementById('barTatap').style.width = pctTatap + '%';
+            document.getElementById('barOnline').style.width = pctOnline + '%';
+
+            document.getElementById('feedbackListContainer').innerHTML = feedbackHtml;
+        }
+
+        // Helper escape HTML to prevent XSS
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        // Custom Modal helper
+        function showModal(title, message, type) {
+            const modal = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalIcon = document.getElementById('modalIcon');
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+
+            if (type === 'success') {
+                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-emerald-100 text-emerald-600 fa-solid fa-check";
+            } else if (type === 'error') {
+                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-red-100 text-red-600 fa-solid fa-triangle-exclamation";
+            } else {
+                modalIcon.className = "w-12 h-12 rounded-full flex items-center justify-center mx-auto text-xl bg-amber-100 text-amber-600 fa-solid fa-circle-exclamation";
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

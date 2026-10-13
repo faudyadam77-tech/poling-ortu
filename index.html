@@ -1,493 +1,571 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Polling Pembelajaran - SD Muhammadiyah 001 Melak</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              brand: {
-                50: '#f0fdf4',
-                100: '#dcfce7',
-                500: '#10b981',
-                600: '#059669',
-                700: '#047857',
-                800: '#065f46',
-                900: '#064e3b',
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      /* Custom scrollbars and transition flourishes */
-      ::-webkit-scrollbar { width: 6px; }
-      ::-webkit-scrollbar-track { background: #f1f1f1; }
-      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-      ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.3s ease-out forwards;
-      }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Polling Pembelajaran - SD Muhammadiyah 001 Melak</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #0f766e 0%, #065f46 100%);
+    min-height: 100vh;
+    color: #1f2937;
+  }
+  .header {
+    background: #ffffff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-bottom: 4px solid #f59e0b;
+  }
+  .header h1 { color: #065f46; font-size: 1.5rem; }
+  .header p { color: #6b7280; margin-top: 5px; font-size: 0.9rem; }
+  .container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 0 15px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .card h2 {
+    color: #065f46;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #f59e0b;
+    padding-bottom: 10px;
+  }
+  .form-group { margin-bottom: 15px; }
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.95rem;
+  }
+  .form-group input[type="text"],
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #0f766e;
+  }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  .radio-option {
+    position: relative;
+  }
+  .radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+  }
+  .radio-option label {
+    display: block;
+    padding: 15px;
+    border: 2px solid #d1d5db;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    background: #f9fafb;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    background: #0f766e;
+    color: #fff;
+    border-color: #065f46;
+    transform: scale(1.02);
+  }
+  .radio-option label .icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
+  .btn {
+    width: 100%;
+    padding: 13px;
+    background: #0f766e;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 10px;
+  }
+  .btn:hover { background: #065f46; }
+  .btn:disabled { background: #9ca3af; cursor: not-allowed; }
+  .alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    display: none;
+    font-size: 0.9rem;
+  }
+  .alert.success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+  .alert.error { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+  .footer {
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+  }
+  .admin-toggle {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+  }
+  /* Sidebar Admin */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: -5px 0 25px rgba(0,0,0,0.3);
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  .sidebar.active { right: 0; }
+  .sidebar-header {
+    background: #065f46;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sidebar-header h3 { font-size: 1.1rem; }
+  .close-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .sidebar-body { padding: 20px; }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-box {
+    background: #f0fdfa;
+    border-left: 4px solid #0f766e;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .stat-box .label { font-size: 0.75rem; color: #6b7280; text-transform: uppercase; }
+  .stat-box .value { font-size: 1.4rem; font-weight: 700; color: #065f46; margin-top: 3px; }
+  .stat-box.full { grid-column: 1 / -1; }
+  .progress-bar {
+    background: #e5e7eb;
+    border-radius: 10px;
+    height: 25px;
+    overflow: hidden;
+    margin: 8px 0;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0f766e, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: width 0.5s;
+  }
+  .feedback-list {
+    max-height: 250px;
+    overflow-y: auto;
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+  .feedback-item {
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .feedback-item:last-child { border-bottom: none; }
+  .feedback-item .name { font-weight: 600; color: #065f46; }
+  .feedback-item .choice {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    margin-left: 5px;
+  }
+  .choice.tatapmuka { background: #dbeafe; color: #1e40af; }
+  .choice.online { background: #fef3c7; color: #92400e; }
+  .feedback-item .msg { color: #4b5563; margin-top: 4px; font-style: italic; }
+  .sidebar-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  .sidebar-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .btn-refresh { background: #0f766e; color: #fff; }
+  .btn-print { background: #f59e0b; color: #fff; }
+  .btn-print:hover { background: #d97706; }
+  .btn-refresh:hover { background: #065f46; }
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+  }
+  .overlay.active { display: block; }
+  .loading {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #fff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 480px) {
+    .header h1 { font-size: 1.2rem; }
+    .radio-group { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: #fff; }
+    .sidebar { position: static; right: 0; width: 100%; max-width: 100%; box-shadow: none; }
+    .sidebar-header, .sidebar-actions, .admin-toggle, .overlay, .header, .container, .footer { display: none !important; }
+    .sidebar-body { padding: 0; }
+    .print-title { display: block !important; text-align: center; margin-bottom: 20px; }
+  }
+  .print-title { display: none; }
+</style>
 </head>
-<body class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 min-h-screen text-slate-800 font-sans flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+<body>
 
-    <header class="w-full bg-white/95 backdrop-blur-md shadow-lg border-b-4 border-amber-400 sticky top-0 z-40 transition-all duration-300">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div class="flex items-center space-x-3 text-center sm:text-left">
-                <div class="w-12 h-12 bg-gradient-to-tr from-emerald-600 to-teal-500 rounded-xl flex items-center justify-center text-white shadow-md text-2xl">
-                    🏫
-                </div>
-                <div>
-                    <h1 class="text-xl sm:text-2xl font-bold text-emerald-900 tracking-tight">SD MUHAMMADIYAH 001 MELAK</h1>
-                    <p class="text-xs sm:text-sm text-slate-500 font-medium">Sistem Pendataan & Polling Metode Pembelajaran</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm">
-                    ✨ Tahun Ajaran Aktif
-                </span>
-            </div>
+<div class="header">
+  <h1>📋 POLLING PEMBELAJARAN</h1>
+  <p>SD Muhammadiyah 001 Melak</p>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h2>Formulir Pilihan Orang Tua / Wali</h2>
+    <p style="color:#6b7280; font-size:0.85rem; margin-bottom:15px;">
+      Mohon isi data berikut untuk menentukan metode pembelajaran yang diinginkan.
+    </p>
+
+    <form id="pollForm">
+      <div class="form-group">
+        <label>Nama Orang Tua / Wali *</label>
+        <input type="text" id="namaOrtu" required placeholder="Contoh: Budi Santoso" />
+      </div>
+
+      <div class="form-group">
+        <label>Nama Siswa *</label>
+        <input type="text" id="namaSiswa" required placeholder="Contoh: Ahmad Fauzi" />
+      </div>
+
+      <div class="form-group">
+        <label>Kelas *</label>
+        <select id="kelas" required>
+          <option value="">-- Pilih Kelas --</option>
+          <option>Kelas 1</option>
+          <option>Kelas 2</option>
+          <option>Kelas 3</option>
+          <option>Kelas 4</option>
+          <option>Kelas 5</option>
+          <option>Kelas 6</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Pilihan Metode Pembelajaran *</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" id="tatapmuka" name="pilihan" value="Tatap Muka" required />
+            <label for="tatapmuka">
+              <span class="icon">🏫</span>
+              Tatap Muka
+            </label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="online" name="pilihan" value="Online" />
+            <label for="online">
+              <span class="icon">💻</span>
+              Online
+            </label>
+          </div>
         </div>
-    </header>
+      </div>
 
-    <main class="w-full max-w-2xl mx-auto px-4 py-8 flex-grow">
-        <div class="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-10 border border-white/20 animate-fade-in">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-emerald-900">Formulir Pilihan Orang Tua / Wali</h2>
-                <p class="text-slate-600 text-sm mt-1">Silakan isi formulir di bawah ini dengan data yang valid untuk menentukan metode pembelajaran putra/putri Anda.</p>
-            </div>
+      <div class="form-group">
+        <label>Masukan / Catatan (Opsional)</label>
+        <textarea id="masukan" placeholder="Tuliskan saran atau catatan Anda di sini..."></textarea>
+      </div>
 
-            <form id="pollForm" class="space-y-6">
-                <!-- Nama Ortu -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Nama Orang Tua / Wali <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">👤</span>
-                        <input type="text" id="namaOrtu" required placeholder="Contoh: Budi Santoso" 
-                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all shadow-sm" />
-                    </div>
-                </div>
+      <button type="submit" class="btn" id="submitBtn">Kirim Pilihan</button>
 
-                <!-- Nama Siswa -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🎓</span>
-                        <input type="text" id="namaSiswa" required placeholder="Contoh: Ahmad Fauzi" 
-                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all shadow-sm" />
-                    </div>
-                </div>
+      <div class="alert success" id="successAlert">
+        ✅ Terima kasih! Pilihan Anda telah berhasil dikirim.
+      </div>
+      <div class="alert error" id="errorAlert">
+        ❌ Gagal mengirim. Silakan coba lagi.
+      </div>
+    </form>
+  </div>
+</div>
 
-                <!-- Kelas -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Kelas Siswa <span class="text-red-500">*</span></label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">🏫</span>
-                        <select id="kelas" required 
-                            class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all shadow-sm appearance-none cursor-pointer">
-                            <option value="">-- Pilih Kelas --</option>
-                            <option value="Kelas 1">Kelas 1</option>
-                            <option value="Kelas 2">Kelas 2</option>
-                            <option value="Kelas 3">Kelas 3</option>
-                            <option value="Kelas 4">Kelas 4</option>
-                            <option value="Kelas 5">Kelas 5</option>
-                            <option value="Kelas 6">Kelas 6</option>
-                        </select>
-                        <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">▼</span>
-                    </div>
-                </div>
+<div class="footer">
+  © SD Muhammadiyah 001 Melak - Sistem Polling Pembelajaran
+</div>
 
-                <!-- Pilihan Metode -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Pilihan Metode Pembelajaran <span class="text-red-500">*</span></label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                        <!-- Tatap Muka Card Option -->
-                        <label class="relative flex flex-col items-center p-5 bg-slate-50 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition-all group">
-                            <input type="radio" id="tatapmuka" name="pilihan" value="Tatap Muka" required class="peer sr-only" />
-                            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform shadow-sm">
-                                🏫
-                            </div>
-                            <span class="font-bold text-slate-800 text-base mb-1">Tatap Muka</span>
-                            <span class="text-xs text-slate-500 text-center">Belajar langsung di sekolah dengan protokol kesehatan</span>
-                            <!-- Active Check Indicator -->
-                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-emerald-600 peer-checked:bg-emerald-600 flex items-center justify-center transition-all">
-                                <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                        </label>
+<button class="admin-toggle" onclick="openAdminLogin()">🔐 Admin</button>
 
-                        <!-- Online Card Option -->
-                        <label class="relative flex flex-col items-center p-5 bg-slate-50 border-2 border-slate-200 rounded-xl cursor-pointer hover:border-amber-500 hover:bg-amber-50/30 transition-all group">
-                            <input type="radio" id="online" name="pilihan" value="Online" class="peer sr-only" />
-                            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform shadow-sm">
-                                💻
-                            </div>
-                            <span class="font-bold text-slate-800 text-base mb-1">Online (Daring)</span>
-                            <span class="text-xs text-slate-500 text-center">Belajar interaktif dari rumah via platform digital</span>
-                            <!-- Active Check Indicator -->
-                            <div class="absolute top-3 right-3 w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-amber-600 peer-checked:bg-amber-600 flex items-center justify-center transition-all">
-                                <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            </div>
-                        </label>
-                    </div>
-                </div>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-                <!-- Masukan / Catatan -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-semibold text-slate-700">Masukan / Catatan Tambahan (Opsional)</label>
-                    <textarea id="masukan" rows="3" placeholder="Tuliskan saran atau catatan Anda di sini..." 
-                        class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all shadow-sm resize-y"></textarea>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" id="submitBtn" 
-                    class="w-full py-3.5 px-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2 text-base active:scale-[0.99]">
-                    <span>Kirim Pilihan Polling</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </button>
-            </form>
-        </div>
-    </main>
-
-    <!-- Notification Toast Modal -->
-    <div id="toastModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center transform scale-95 transition-transform duration-300" id="toastContainer">
-            <div id="toastIcon" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner"></div>
-            <h3 id="toastTitle" class="text-xl font-bold text-slate-900 mb-2"></h3>
-            <p id="toastMessage" class="text-slate-600 text-sm mb-6"></p>
-            <button onclick="closeToast()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl text-sm transition-all shadow">
-                Tutup
-            </button>
-        </div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h3>📊 Rangkuman Admin</h3>
+    <button class="close-btn" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sidebar-body">
+    <div class="print-title">
+      <h2>RANGKUMAN POLLING PEMBELAJARAN</h2>
+      <p>SD Muhammadiyah 001 Melak</p>
+      <p id="printDate"></p>
     </div>
 
-    <!-- Admin Password Prompt Modal -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-fade-in">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-emerald-900 flex items-center gap-2">🔐 Autentikasi Admin</h3>
-                <button onclick="closeAdminLogin()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
-            </div>
-            <p class="text-xs text-slate-500 mb-4">Masukkan sandi khusus administrator untuk membuka dasbor rangkuman.</p>
-            <form onsubmit="handleAdminAuth(event)" class="space-y-4">
-                <input type="password" id="adminPasswordInput" required placeholder="Kata sandi..." 
-                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-                <div class="flex gap-2">
-                    <button type="button" onclick="closeAdminLogin()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition-all">Batal</button>
-                    <button type="submit" class="w-1/2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm transition-all shadow">Masuk</button>
-                </div>
-            </form>
-        </div>
+    <div class="stat-grid">
+      <div class="stat-box">
+        <div class="label">Total Polling</div>
+        <div class="value" id="totalPoll">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Total Kelas</div>
+        <div class="value" id="totalKelas">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">🏫 Tatap Muka</div>
+        <div class="value" id="countTM">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">💻 Online</div>
+        <div class="value" id="countOL">0</div>
+      </div>
     </div>
 
-    <!-- Overlay -->
-    <div id="overlay" onclick="closeSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden opacity-0 transition-opacity duration-300"></div>
-
-    <!-- Sidebar Dashboard -->
-    <div id="sidebar" class="fixed top-0 right-0 w-full max-w-md h-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
-        <div class="bg-gradient-to-r from-emerald-800 to-teal-800 text-white p-5 flex items-center justify-between shadow-md">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl">📊</span>
-                <h3 class="font-bold text-lg">Dasbor Rangkuman Admin</h3>
-            </div>
-            <button onclick="closeSidebar()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xl transition-all">&times;</button>
+    <div>
+      <strong style="font-size:0.9rem;">Persentase Pilihan:</strong>
+      <div style="margin-top:8px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+          <span>Tatap Muka</span>
+          <span id="percentTM">0%</span>
         </div>
-
-        <div class="p-6 overflow-y-auto flex-grow space-y-6">
-            <!-- Printable Header info -->
-            <div class="hidden print:block text-center mb-4">
-                <h2 class="text-lg font-bold">RANGKUMAN POLLING PEMBELAJARAN</h2>
-                <p class="text-xs text-slate-600">SD Muhammadiyah 001 Melak</p>
-                <p id="printDate" class="text-xs text-slate-500 mt-1"></p>
-            </div>
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-emerald-50/80 border-l-4 border-emerald-600 p-4 rounded-xl shadow-xs">
-                    <div class="text-xs font-bold text-emerald-800 uppercase tracking-wider">Total Polling</div>
-                    <div id="totalPoll" class="text-2xl font-extrabold text-emerald-900 mt-1">0</div>
-                </div>
-                <div class="bg-teal-50/80 border-l-4 border-teal-600 p-4 rounded-xl shadow-xs">
-                    <div class="text-xs font-bold text-teal-800 uppercase tracking-wider">Total Kelas</div>
-                    <div id="totalKelas" class="text-2xl font-extrabold text-teal-900 mt-1">0</div>
-                </div>
-                <div class="bg-blue-50/80 border-l-4 border-blue-600 p-4 rounded-xl shadow-xs">
-                    <div class="text-xs font-bold text-blue-800 uppercase tracking-wider">🏫 Tatap Muka</div>
-                    <div id="countTM" class="text-2xl font-extrabold text-blue-900 mt-1">0</div>
-                </div>
-                <div class="bg-amber-50/80 border-l-4 border-amber-500 p-4 rounded-xl shadow-xs">
-                    <div class="text-xs font-bold text-amber-800 uppercase tracking-wider">💻 Online</div>
-                    <div id="countOL" class="text-2xl font-extrabold text-amber-900 mt-1">0</div>
-                </div>
-            </div>
-
-            <!-- Percentage Bars -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-xs space-y-4">
-                <h4 class="font-bold text-sm text-slate-800">Persentase Pilihan Metode</h4>
-                <div>
-                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
-                        <span>Tatap Muka</span>
-                        <span id="percentTM">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden shadow-inner">
-                        <div id="barTM" class="bg-gradient-to-r from-emerald-600 to-teal-500 h-full transition-all duration-500 rounded-full text-center text-[9px] text-white font-bold leading-3"></div>
-                    </div>
-                </div>
-                <div>
-                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
-                        <span>Online (Daring)</span>
-                        <span id="percentOL">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden shadow-inner">
-                        <div id="barOL" class="bg-gradient-to-r from-amber-500 to-yellow-400 h-full transition-all duration-500 rounded-full text-center text-[9px] text-white font-bold leading-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Feedback Feed -->
-            <div class="space-y-2">
-                <h4 class="font-bold text-sm text-slate-800 flex items-center justify-between">
-                    <span>📝 Masukan & Catatan</span>
-                    <span class="text-xs font-normal text-slate-500">Terbaru</span>
-                </h4>
-                <div id="feedbackList" class="bg-slate-50 rounded-xl border border-slate-200 max-h-56 overflow-y-auto divide-y divide-slate-100 p-2 space-y-2">
-                    <p class="text-xs text-slate-400 text-center py-6">Belum ada masukan tercatat.</p>
-                </div>
-            </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="barTM" style="width:0%">0%</div>
         </div>
-
-        <!-- Sidebar Actions -->
-        <div class="p-4 bg-slate-100 border-t border-slate-200 flex gap-2">
-            <button onclick="loadSummary()" class="flex-1 py-2.5 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl text-xs shadow transition-all flex items-center justify-center gap-1.5">
-                <span>🔄</span> Perbarui Data
-            </button>
-            <button onclick="window.print()" class="flex-1 py-2.5 px-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-xl text-xs shadow transition-all flex items-center justify-center gap-1.5">
-                <span>🖨️</span> Cetak Laporan
-            </button>
+      </div>
+      <div style="margin-top:10px;">
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
+          <span>Online</span>
+          <span id="percentOL">0%</span>
         </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="barOL" style="width:0%; background:linear-gradient(90deg,#f59e0b,#fbbf24);">0%</div>
+        </div>
+      </div>
     </div>
 
-    <!-- Floating Admin Trigger Button -->
-    <button onclick="openAdminLoginModal()" class="fixed bottom-6 right-6 bg-slate-900/90 hover:bg-slate-900 text-white px-4 py-2.5 rounded-full shadow-xl hover:shadow-2xl border border-white/20 text-xs font-semibold backdrop-blur-md transition-all flex items-center gap-2 z-30 group">
-        <span class="text-base group-hover:rotate-12 transition-transform">🔐</span> Dasbor Admin
-    </button>
+    <div style="margin-top:20px;">
+      <strong style="font-size:0.9rem;">📝 Masukan Orang Tua:</strong>
+      <div class="feedback-list" id="feedbackList">
+        <p style="color:#9ca3af; text-align:center; padding:10px;">Belum ada masukan.</p>
+      </div>
+    </div>
 
-    <footer class="w-full text-center py-6 text-xs text-slate-400 bg-black/20 backdrop-blur-xs mt-auto">
-        <p>&copy; 2026 SD Muhammadiyah 001 Melak &bull; Sistem Polling Pembelajaran Profesional</p>
-    </footer>
+    <div class="sidebar-actions">
+      <button class="btn-refresh" onclick="loadSummary()">🔄 Refresh</button>
+      <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
+    </div>
+  </div>
+</div>
 
-    <script>
-      /* Konfigurasi endpoint Apps Script (Sesuaikan URL Anda) */
-      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPBwYK1H1ClPj5VONISauUvv4gdk0Ogqy9kkk7pLmyaoVUBeUbt_cjkQg9BVVIYfLKnQ/exec";
-      const ADMIN_PASSWORD = "muhammadiyah001";
+<script>
+  /* ============================================================
+     ⚠️ GANTI URL DI BAWAH INI DENGAN URL WEB APP ANDA
+     (URL Google Apps Script yang sudah di-deploy)
+     ============================================================ */
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzPBwYK1H1ClPj5VONISauUvv4gdk0Ogqy9kkk7pLmyaoVUBeUbt_cjkQg9BVVIYfLKnQ/exec";
+  /* ============================================================ */
 
-      const form = document.getElementById('pollForm');
-      const submitBtn = document.getElementById('submitBtn');
+  /* Password admin sederhana (ganti sesuai keinginan) */
+  const ADMIN_PASSWORD = "muhammadiyah001";
 
-      /* Custom Notification Toast Handler */
-      function showToast(title, message, isSuccess = true) {
-        const modal = document.getElementById('toastModal');
-        const container = document.getElementById('toastContainer');
-        const icon = document.getElementById('toastIcon');
-        const titleEl = document.getElementById('toastTitle');
-        const msgEl = document.getElementById('toastMessage');
+  const form = document.getElementById('pollForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const successAlert = document.getElementById('successAlert');
+  const errorAlert = document.getElementById('errorAlert');
 
-        titleEl.textContent = title;
-        msgEl.textContent = message;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    successAlert.style.display = 'none';
+    errorAlert.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading"></span>Mengirim...';
 
-        if (isSuccess) {
-          icon.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-emerald-100 text-emerald-600 shadow-inner";
-          icon.innerHTML = "✅";
-        } else {
-          icon.className = "w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-4 bg-red-100 text-red-600 shadow-inner";
-          icon.innerHTML = "❌";
-        }
+    const data = {
+      action: 'submit',
+      namaOrtu: document.getElementById('namaOrtu').value.trim(),
+      namaSiswa: document.getElementById('namaSiswa').value.trim(),
+      kelas: document.getElementById('kelas').value,
+      pilihan: document.querySelector('input[name="pilihan"]:checked').value,
+      masukan: document.getElementById('masukan').value.trim(),
+      timestamp: new Date().toISOString()
+    };
 
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-          modal.classList.remove('opacity-0');
-          container.classList.remove('scale-95');
-          container.classList.add('scale-100');
-        }, 10);
-      }
-
-      function closeToast() {
-        const modal = document.getElementById('toastModal');
-        const container = document.getElementById('toastContainer');
-        modal.classList.add('opacity-0');
-        container.classList.remove('scale-100');
-        container.classList.add('scale-95');
-        setTimeout(() => {
-          modal.classList.add('hidden');
-        }, 300);
-      }
-
-      /* Form Submission Event Listener */
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const originalBtnContent = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          >
-          <span>Mengirim Pilihan...</span>
-        `;
-
-        const payload = {
-          action: 'submit',
-          namaOrtu: document.getElementById('namaOrtu').value.trim(),
-          namaSiswa: document.getElementById('namaSiswa').value.trim(),
-          kelas: document.getElementById('kelas').value,
-          pilihan: document.querySelector('input[name="pilihan"]:checked').value,
-          masukan: document.getElementById('masukan').value.trim(),
-          timestamp: new Date().toISOString()
-        };
-
-        try {
-          const response = await fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-          
-          showToast("Berhasil Terkirim!", "Terima kasih, pilihan polling Anda telah berhasil direkam oleh sistem.", true);
-          form.reset();
-        } catch (err) {
-          console.error(err);
-          showToast("Gagal Mengirim", "Terjadi kendala koneksi atau server Google Apps Script. Silakan coba beberapa saat lagi.", false);
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnContent;
-        }
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
       });
+      // Karena no-cors, kita asumsikan berhasil jika tidak ada error
+      successAlert.style.display = 'block';
+      form.reset();
+      setTimeout(() => { successAlert.style.display = 'none'; }, 5000);
+    } catch (err) {
+      errorAlert.style.display = 'block';
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Kirim Pilihan';
+    }
+  });
 
-      /* Admin Modal & Sidebar Controllers */
-      function openAdminLoginModal() {
-        document.getElementById('adminModal').classList.remove('hidden');
-      }
+  /* ====== ADMIN SIDEBAR ====== */
+  function openAdminLogin() {
+    const pwd = prompt("Masukkan password admin:");
+    if (pwd === ADMIN_PASSWORD) {
+      openSidebar();
+      loadSummary();
+    } else if (pwd !== null) {
+      alert("Password salah!");
+    }
+  }
 
-      function closeAdminLogin() {
-        document.getElementById('adminModal').classList.add('hidden');
-        document.getElementById('adminPasswordInput').value = '';
-      }
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+  }
 
-      function handleAdminAuth(e) {
-        e.preventDefault();
-        const pwd = document.getElementById('adminPasswordInput').value;
-        if (pwd === ADMIN_PASSWORD) {
-          closeAdminLogin();
-          openSidebar();
-          loadSummary();
-        } else {
-          showToast("Kata Sandi Salah", "Kata sandi admin yang Anda masukkan tidak valid.", false);
-        }
-      }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+  }
 
-      function openSidebar() {
-        document.getElementById('sidebar').classList.remove('translate-x-full');
-        const overlay = document.getElementById('overlay');
-        overlay.classList.remove('hidden');
-        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-      }
+  async function loadSummary() {
+    const url = SCRIPT_URL + '?action=summary';
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      renderSummary(data);
+    } catch (err) {
+      alert("Gagal memuat data. Periksa URL App Script atau koneksi.");
+      console.error(err);
+    }
+  }
 
-      function closeSidebar() {
-        document.getElementById('sidebar').classList.add('translate-x-full');
-        const overlay = document.getElementById('overlay');
-        overlay.classList.add('opacity-0');
-        setTimeout(() => overlay.classList.add('hidden'), 300);
-      }
+  function renderSummary(data) {
+    const total = data.total || 0;
+    const tm = data.tatapMuka || 0;
+    const ol = data.online || 0;
+    const percentTM = total > 0 ? ((tm / total) * 100).toFixed(1) : 0;
+    const percentOL = total > 0 ? ((ol / total) * 100).toFixed(1) : 0;
 
-      async function loadSummary() {
-        const url = SCRIPT_URL + '?action=summary';
-        try {
-          const res = await fetch(url);
-          const data = await res.json();
-          renderSummary(data);
-        } catch (err) {
-          console.warn("Gagal mengambil data via fetch langsung (mungkin CORS atau URL kosong). Memuat data simulasi responsif demo...");
-          // Fallback demo mock data if endpoint is default placeholder
-          renderSummary({
-            total: 125,
-            jumlahKelas: 6,
-            tatapMuka: 85,
-            online: 40,
-            feedback: [
-              { namaOrtu: "Siti Rahma", namaSiswa: "Alya Zahra", kelas: "Kelas 3", pilihan: "Tatap Muka", masukan: "Semoga sekolah tatap muka segera berjalan optimal." },
-              { namaOrtu: "Hendra Wijaya", namaSiswa: "Rizky Wijaya", kelas: "Kelas 5", pilihan: "Online", masukan: "Lebih fleksibel untuk saat ini." }
-            ]
-          });
-        }
-      }
+    document.getElementById('totalPoll').textContent = total;
+    document.getElementById('totalKelas').textContent = data.jumlahKelas || 0;
+    document.getElementById('countTM').textContent = tm;
+    document.getElementById('countOL').textContent = ol;
+    document.getElementById('percentTM').textContent = percentTM + '%';
+    document.getElementById('percentOL').textContent = percentOL + '%';
+    document.getElementById('barTM').style.width = percentTM + '%';
+    document.getElementById('barTM').textContent = percentTM + '%';
+    document.getElementById('barOL').style.width = percentOL + '%';
+    document.getElementById('barOL').textContent = percentOL + '%';
 
-      function renderSummary(data) {
-        const total = data.total || 0;
-        const tm = data.tatapMuka || 0;
-        const ol = data.online || 0;
-        const percentTM = total > 0 ? ((tm / total) * 100).toFixed(1) : 0;
-        const percentOL = total > 0 ? ((ol / total) * 100).toFixed(1) : 0;
+    const fbList = document.getElementById('feedbackList');
+    if (data.feedback && data.feedback.length > 0) {
+      fbList.innerHTML = data.feedback.map(f => `
+        <div class="feedback-item">
+          <span class="name">${escapeHtml(f.namaOrtu)}</span>
+          <span class="choice ${f.pilihan === 'Tatap Muka' ? 'tatapmuka' : 'online'}">${f.pilihan}</span>
+          <div style="font-size:0.75rem; color:#9ca3af;">${escapeHtml(f.namaSiswa)} - ${escapeHtml(f.kelas)}</div>
+          ${f.masukan ? `<div class="msg">"${escapeHtml(f.masukan)}"</div>` : ''}
+        </div>
+      `).join('');
+    } else {
+      fbList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:10px;">Belum ada masukan.</p>';
+    }
 
-        document.getElementById('totalPoll').textContent = total;
-        document.getElementById('totalKelas').textContent = data.jumlahKelas || 6;
-        document.getElementById('countTM').textContent = tm;
-        document.getElementById('countOL').textContent = ol;
-        document.getElementById('percentTM').textContent = percentTM + '%';
-        document.getElementById('percentOL').textContent = percentOL + '%';
-        
-        const barTM = document.getElementById('barTM');
-        barTM.style.width = percentTM + '%';
-        barTM.textContent = percentTM > 5 ? percentTM + '%' : '';
+    document.getElementById('printDate').textContent =
+      'Dicetak pada: ' + new Date().toLocaleString('id-ID');
+  }
 
-        const barOL = document.getElementById('barOL');
-        barOL.style.width = percentOL + '%';
-        barOL.textContent = percentOL > 5 ? percentOL + '%' : '';
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>
 
-        const fbList = document.getElementById('feedbackList');
-        if (data.feedback && data.feedback.length > 0) {
-          fbList.innerHTML = data.feedback.map(f => `
-            <div class="p-2.5 bg-white rounded-lg shadow-2xs border border-slate-100 text-xs space-y-1">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-emerald-900">${escapeHtml(f.namaOrtu)}</span>
-                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${f.pilihan === 'Tatap Muka' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${f.pilihan}</span>
-              </div>
-              <div class="text-slate-500">${escapeHtml(f.namaSiswa)} &bull; ${escapeHtml(f.kelas)}</div>
-              ${f.masukan ? `<div class="text-slate-600 italic bg-slate-50 p-1.5 rounded">"${escapeHtml(f.masukan)}"</div>` : ''}
-            </div>
-          `).join('');
-        } else {
-          fbList.innerHTML = '<p class="text-xs text-slate-400 text-center py-6">Belum ada masukan tercatat.</p>';
-        }
-
-        document.getElementById('printDate').textContent = 'Dicetak pada: ' + new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' });
-      }
-
-      function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
-      }
-    </script>
 </body>
 </html>
